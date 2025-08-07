@@ -1,3 +1,4 @@
+// app.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -8,18 +9,11 @@ const port = process.env.PORT || 3001;
 // POSTされたJSONデータをパースするためのミドルウェア
 app.use(bodyParser.json());
 
-// 静的ファイル（HTML, CSS, JSなど）を配信するディレクトリ
-// この例では、アプリケーションのルートディレクトリ直下の'public'フォルダに配置することを想定
+// publicフォルダ内の静的ファイル（HTML, CSS, JSなど）を配信
 app.use(express.static(path.join(__dirname, 'public')));
 
 let currentMode = '出勤'; // 初期モードは「出勤」
 let touchLogs = []; // タッチログを保存する配列
-
-// ウェブUIを配信するルート
-// index.htmlを返す
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 // GET /api/status - 現在のモードとログを返すAPI
 app.get('/api/status', (req, res) => {
@@ -34,6 +28,7 @@ app.post('/api/idm', (req, res) => {
     const idm = req.body.idm;
     if (idm) {
         const timestamp = new Date().toLocaleString('ja-JP');
+        // UIで選択されているモードをログに記録
         const logEntry = { idm: idm, mode: currentMode, timestamp: timestamp };
         touchLogs.push(logEntry);
         // ログのサイズを制限（例: 最新100件のみ保持）

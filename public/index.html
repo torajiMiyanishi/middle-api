@@ -8,10 +8,12 @@
     <div class="container">
       <h1>NFC 出退勤システム</h1>
       <p>現在のモード:</p>
-      <div id="mode-display" data-mode="出勤">出勤</div>
-      <div class="mode-buttons">
-        <button id="출勤-button" onclick="setMode('出勤')">出勤モード</button>
-        <button id="退勤-button" onclick="setMode('退勤')">退勤モード</button>
+      <div id="mode-display-container">
+        <span id="mode-text">出勤</span>
+        <label class="switch">
+          <input type="checkbox" id="mode-toggle">
+          <span class="slider round"></span>
+        </label>
       </div>
       <div class="log-container">
         <h2>タッチログ</h2>
@@ -23,6 +25,23 @@
     <script>
       let currentMode = '出勤';
 
+      // UIのモード表示を更新する関数
+      function updateModeDisplay(mode) {
+        const modeText = document.getElementById('mode-text');
+        const modeToggle = document.getElementById('mode-toggle');
+        
+        modeText.innerText = mode;
+        if (mode === '出勤') {
+          modeText.style.color = '#28a745';
+          modeToggle.checked = true;
+        } else {
+          modeText.style.color = '#dc3545';
+          modeToggle.checked = false;
+        }
+        currentMode = mode;
+      }
+
+      // サーバーにモード切り替えを要求する関数
       async function setMode(mode) {
         try {
           const response = await fetch('/api/mode', {
@@ -35,6 +54,7 @@
           const data = await response.json();
           if (data.success) {
             updateModeDisplay(data.newMode);
+            // モード切り替え後、ログを即時更新
             fetchAndRenderLogs();
           }
         } catch (error) {
@@ -42,19 +62,7 @@
         }
       }
 
-      function updateModeDisplay(mode) {
-        const modeDisplay = document.getElementById('mode-display');
-        modeDisplay.innerText = mode;
-        modeDisplay.dataset.mode = mode;
-        modeDisplay.className = '';
-        if (mode === '出勤') {
-          modeDisplay.classList.add('mode-출근');
-        } else {
-          modeDisplay.classList.add('mode-退勤');
-        }
-        currentMode = mode;
-      }
-
+      // ログを取得してUIを更新する関数
       async function fetchAndRenderLogs() {
         try {
           const response = await fetch('/api/status');
@@ -67,7 +75,7 @@
               li.className = 'log-item';
               li.innerHTML = `
                 <div><span class="log-item-idm">${log.idm}</span></div>
-                <div><span class="log-item-mode">${log.mode}</span></div>
+                <div><span class="log-item-mode" style="color: ${log.mode === '出勤' ? '#28a745' : '#dc3545'};">${log.mode}</span></div>
                 <div><span class="log-item-timestamp">${log.timestamp}</span></div>
               `;
               logList.appendChild(li);
@@ -75,15 +83,27 @@
           } else {
             logList.innerHTML = '<li>ログはありません</li>';
           }
+          // fetchしたデータからモードを更新する
           updateModeDisplay(data.mode);
         } catch (error) {
           console.error('Failed to fetch logs:', error);
         }
       }
 
+      // ページロード時に実行
       window.onload = function() {
         fetchAndRenderLogs();
+        // ログの自動更新（5秒ごと）
         setInterval(fetchAndRenderLogs, 5000);
+        
+        const modeToggle = document.getElementById('mode-toggle');
+        modeToggle.addEventListener('change', (event) => {
+          if (event.target.checked) {
+            setMode('出勤');
+          } else {
+            setMode('退勤');
+          }
+        });
       };
     </script>
   </body>
