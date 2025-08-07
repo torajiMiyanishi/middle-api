@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NFC Attendance System</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>NFC 出退勤システム</h1>
+      <p>現在のモード:</p>
+      <div id="mode-display" data-mode="出勤">出勤</div>
+      <div class="mode-buttons">
+        <button id="출勤-button" onclick="setMode('出勤')">出勤モード</button>
+        <button id="退勤-button" onclick="setMode('退勤')">退勤モード</button>
+      </div>
+      <div class="log-container">
+        <h2>タッチログ</h2>
+        <ul id="log-list" class="log-list">
+          <li>ログはありません</li>
+        </ul>
+      </div>
+    </div>
+    <script>
+      let currentMode = '出勤';
+
+      async function setMode(mode) {
+        try {
+          const response = await fetch('/api/mode', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ mode: mode })
+          });
+          const data = await response.json();
+          if (data.success) {
+            updateModeDisplay(data.newMode);
+            fetchAndRenderLogs();
+          }
+        } catch (error) {
+          console.error('Failed to set mode:', error);
+        }
+      }
+
+      function updateModeDisplay(mode) {
+        const modeDisplay = document.getElementById('mode-display');
+        modeDisplay.innerText = mode;
+        modeDisplay.dataset.mode = mode;
+        modeDisplay.className = '';
+        if (mode === '出勤') {
+          modeDisplay.classList.add('mode-출근');
+        } else {
+          modeDisplay.classList.add('mode-退勤');
+        }
+        currentMode = mode;
+      }
+
+      async function fetchAndRenderLogs() {
+        try {
+          const response = await fetch('/api/status');
+          const data = await response.json();
+          const logList = document.getElementById('log-list');
+          logList.innerHTML = '';
+          if (data.logs.length > 0) {
+            data.logs.reverse().forEach(log => {
+              const li = document.createElement('li');
+              li.className = 'log-item';
+              li.innerHTML = `
+                <div><span class="log-item-idm">${log.idm}</span></div>
+                <div><span class="log-item-mode">${log.mode}</span></div>
+                <div><span class="log-item-timestamp">${log.timestamp}</span></div>
+              `;
+              logList.appendChild(li);
+            });
+          } else {
+            logList.innerHTML = '<li>ログはありません</li>';
+          }
+          updateModeDisplay(data.mode);
+        } catch (error) {
+          console.error('Failed to fetch logs:', error);
+        }
+      }
+
+      window.onload = function() {
+        fetchAndRenderLogs();
+        setInterval(fetchAndRenderLogs, 5000);
+      };
+    </script>
+  </body>
+</html>

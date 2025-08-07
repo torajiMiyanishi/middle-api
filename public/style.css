@@ -1,0 +1,105 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 20px;
+  background-color: #f0f2f5;
+  color: #333;
+}
+.container {
+  max-width: 800px;
+  width: 100%;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+h1 {
+  color: #007BFF;
+  margin-bottom: 20px;
+}
+#mode-display {
+  font-size: 2em;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: white;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+#mode-출근 {
+  background-color: #28a745;
+}
+#mode-退勤 {
+  background-color: #dc3545;
+}
+.mode-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+.mode-buttons button {
+  padding: 12px 25px;
+  font-size: 1em;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.mode-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+#출勤-button {
+  background-color: #28a745;
+}
+#退勤-button {
+  background-color: #dc3545;
+}
+.log-container {
+  margin-top: 30px;
+  text-align: left;
+}
+.log-container h2 {
+  border-bottom: 2px solid #007BFF;
+  padding-bottom: 5px;
+}
+.log-list {
+  list-style: none;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+}
+.log-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.log-item:last-child {
+  border-bottom: none;
+}
+.log-item-idm {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  color: #555;
+}
+.log-item-mode {
+  font-weight: bold;
+}
+.log-item-timestamp {
+  font-size: 0.8em;
+  color: #888;
+}
