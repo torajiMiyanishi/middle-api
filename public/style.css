@@ -4,7 +4,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0;
+  margin: 40px;
   padding: 20px;
   background-color: #f0f2f5;
   color: #333;
@@ -21,6 +21,13 @@ h1 {
   color: #007BFF;
   margin-bottom: 20px;
   font-weight: 700;
+}
+#current-time {
+  font-size: 1.5em;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
 }
 #mode-display-container {
   display: flex;
@@ -102,7 +109,6 @@ input:checked + .slider:before {
   box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
 }
 .log-item-header {
-    /* log-itemのグリッド設定と一致するように修正 */
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 0.5fr 2fr 0.5fr;
     font-weight: bold;
@@ -132,6 +138,7 @@ input:checked + .slider:before {
   border-bottom: none;
 }
 .log-item-idm {
+  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
   color: #333;
 }
