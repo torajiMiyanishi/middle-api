@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ログファイルが保存されるディレクトリ
 const logDir = path.join(__dirname, 'private', 'logs');
 if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
+    fs.mkdirSync(logDir, { recursive: true });
 }
 
 let currentMode = '出勤'; // 初期モードは「出勤」
@@ -63,37 +63,38 @@ app.get('/api/status', (req, res) => {
 // GET /api/gas-polling - GASポーリング専用のAPI
 // このエンドポイントが呼ばれたときだけ、isSyncedWithGasフラグを更新
 app.get('/api/gas-polling', (req, res) => {
-    // 同期されていない最新のログを見つける
-    const unsyncedLog = touchLogs.find(log => log.isSyncedWithGas === false);
-    
-    if (unsyncedLog) {
-        // 同期フラグを更新
-        unsyncedLog.isSyncedWithGas = true;
-        
-        // ファイルにも変更を保存
-        const date = new Date().toISOString().split('T')[0];
-        const logFile = path.join(logDir, `${date}.json`);
-        fs.writeFileSync(logFile, JSON.stringify(touchLogs, null, 2), 'utf8');
-        
-        console.log(`GASポーリングによりログが同期されました。IDm: ${unsyncedLog.idm}`);
-        
-        res.status(200).json({
-            success: true,
-            syncedLog: unsyncedLog
-        });
-    } else {
-        res.status(200).json({
-            success: true,
-            message: 'No unsynced logs to process.'
-        });
-    }
+    // 同期されていない最新のログを見つける
+    const unsyncedLog = touchLogs.find(log => log.isSyncedWithGas === false);
+    
+    if (unsyncedLog) {
+        // 同期フラグを更新
+        unsyncedLog.isSyncedWithGas = true;
+        
+        // ファイルにも変更を保存
+        const date = new Date().toISOString().split('T')[0];
+        const logFile = path.join(logDir, `${date}.json`);
+        fs.writeFileSync(logFile, JSON.stringify(touchLogs, null, 2), 'utf8');
+        
+        console.log(`GASポーリングによりログが同期されました。IDm: ${unsyncedLog.idm}`);
+        
+        res.status(200).json({
+            success: true,
+            syncedLog: unsyncedLog
+        });
+    } else {
+        res.status(200).json({
+            success: true,
+            message: 'No unsynced logs to process.'
+        });
+    }
 });
 
 // POST /api/idm - C#アプリからIDmを受け取るAPI
 app.post('/api/idm', (req, res) => {
     const idm = req.body.idm;
     if (idm) {
-        const timestamp = new Date().toLocaleString('ja-JP');
+        // タイムスタンプを日本時間で生成
+        const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
         const employeeInfo = employeeData[idm] || { employeeId: '不明', name: '不明' };
         
         const logEntry = { 
