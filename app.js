@@ -52,23 +52,23 @@ function loadLatestLogFile() {
 loadLatestLogFile();
 
 // GET /api/status - 現在のモードとログを返すAPI
-app.get('/api/status', (req, res) => {
-    // GASからのポーリングがあったと見なし、isSyncedWithGasフラグを更新
-    const unsyncedLogIndex = touchLogs.findIndex(log => log.isSyncedWithGas === false);
-    if (unsyncedLogIndex !== -1) {
-        touchLogs[unsyncedLogIndex].isSyncedWithGas = true;
+// app.get('/api/status', (req, res) => {
+//     // GASからのポーリングがあったと見なし、isSyncedWithGasフラグを更新
+//     const unsyncedLogIndex = touchLogs.findIndex(log => log.isSyncedWithGas === false);
+//     if (unsyncedLogIndex !== -1) {
+//         touchLogs[unsyncedLogIndex].isSyncedWithGas = true;
         
-        // ファイルにも変更を保存
-        const date = new Date(touchLogs[unsyncedLogIndex].timestamp).toISOString().split('T')[0];
-        const logFile = path.join(logDir, `${date}.json`);
-        fs.writeFileSync(logFile, JSON.stringify(touchLogs, null, 2), 'utf8');
-    }
+//         // ファイルにも変更を保存
+//         const date = new Date(touchLogs[unsyncedLogIndex].timestamp).toISOString().split('T')[0];
+//         const logFile = path.join(logDir, `${date}.json`);
+//         fs.writeFileSync(logFile, JSON.stringify(touchLogs, null, 2), 'utf8');
+//     }
 
-    res.status(200).json({
-        mode: currentMode,
-        logs: touchLogs
-    });
-});
+//     res.status(200).json({
+//         mode: currentMode,
+//         logs: touchLogs
+//     });
+// });
 
 // POST /api/idm - C#アプリからIDmを受け取るAPI
 app.post('/api/idm', (req, res) => {
