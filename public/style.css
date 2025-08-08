@@ -103,8 +103,9 @@ input:checked + .slider:before {
   box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
 }
 .log-item-header {
+    /* log-itemのグリッド設定と一致するように修正 */
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 0.5fr 2fr;
+    grid-template-columns: 1.5fr 1fr 1fr 0.5fr 2fr 0.5fr;
     font-weight: bold;
     padding: 12px;
     border-bottom: 1px solid #e0e0e0;
@@ -118,7 +119,7 @@ input:checked + .slider:before {
 }
 .log-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 0.5fr 2fr;
+  grid-template-columns: 1.5fr 1fr 1fr 0.5fr 2fr 0.5fr;
   padding: 12px;
   border-bottom: 1px solid #eee;
   align-items: center;
@@ -148,6 +149,10 @@ input:checked + .slider:before {
 .log-item-timestamp {
   font-size: 0.75em;
   color: #888;
+}
+.log-item-sync {
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
 /* Noto Sans JPフォントのインポート */
