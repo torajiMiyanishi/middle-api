@@ -110,7 +110,8 @@ input:checked + .slider:before {
 }
 .log-item-header {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 0.5fr 2fr 0.5fr;
+    /* 各要素の幅をコンテンツに合わせて調整 */
+    grid-template-columns: 2fr 1fr 1fr 0.5fr 0.5fr 1.5fr;
     font-weight: bold;
     padding: 12px;
     border-bottom: 1px solid #e0e0e0;
@@ -124,7 +125,8 @@ input:checked + .slider:before {
 }
 .log-item {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 0.5fr 2fr 0.5fr;
+  /* ヘッダーのグリッド設定と一致させる */
+  grid-template-columns: 2fr 1fr 1fr 0.5fr 0.5fr 1.5fr;
   padding: 12px;
   border-bottom: 1px solid #eee;
   align-items: center;
@@ -139,21 +141,20 @@ input:checked + .slider:before {
 }
 .log-item-idm {
   font-family: 'Courier New', Courier, monospace;
-  font-weight: bold;
-  color: #333;
+  font-weight: normal; /* 目立たなくするために太さを普通に */
+  color: #aaa; /* 色を薄いグレーに変更 */
+  font-size: 0.8em; /* フォントサイズを少し小さく */
+  word-break: break-all; /* 長いIDmがはみ出さないように */
 }
 .log-item-employeeId,
-.log-item-name {
-  font-weight: normal;
-  color: #555;
+.log-item-name,
+.log-item-timestamp {
+  font-weight: bold; /* 視認性を高めるため太字に */
+  color: #333; /* 色を濃く */
 }
 .log-item-mode {
   font-weight: bold;
   font-size: 0.9em;
-}
-.log-item-timestamp {
-  font-size: 0.75em;
-  color: #888;
 }
 .log-item-sync {
   font-size: 1.2em;
