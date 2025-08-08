@@ -55,7 +55,7 @@ loadLatestLogFile();
 // UIを閲覧するだけではisSyncedWithGasフラグは更新されない
 app.get('/api/status', (req, res) => {
     res.status(200).json({
-        mode: currentMode,
+        mode: currentMode,
         logs: touchLogs
     });
 });
@@ -63,30 +63,32 @@ app.get('/api/status', (req, res) => {
 // GET /api/gas-polling - GASポーリング専用のAPI
 // このエンドポイントが呼ばれたときだけ、isSyncedWithGasフラグを更新
 app.get('/api/gas-polling', (req, res) => {
-    // 同期されていない最新のログを見つける
-    const unsyncedLog = touchLogs.find(log => log.isSyncedWithGas === false);
-    
-    if (unsyncedLog) {
-        // 同期フラグを更新
-        unsyncedLog.isSyncedWithGas = true;
-        
-        // ファイルにも変更を保存
-        const date = new Date().toISOString().split('T')[0];
-        const logFile = path.join(logDir, `${date}.json`);
-        fs.writeFileSync(logFile, JSON.stringify(touchLogs, null, 2), 'utf8');
-        
-        console.log(`GASポーリングによりログが同期されました。IDm: ${unsyncedLog.idm}`);
-        
-        res.status(200).json({
-            success: true,
-            syncedLog: unsyncedLog
-        });
-    } else {
-        res.status(200).json({
-            success: true,
-            message: 'No unsynced logs to process.'
-        });
-    }
+    // 同期されていないすべてのログを見つける
+    const unsyncedLogs = touchLogs.filter(log => log.isSyncedWithGas === false);
+    
+    if (unsyncedLogs.length > 0) {
+        // 同期フラグを更新
+        unsyncedLogs.forEach(log => {
+            log.isSyncedWithGas = true;
+        });
+        
+        // ファイルにも変更を保存
+        const date = new Date().toISOString().split('T')[0];
+        const logFile = path.join(logDir, `${date}.json`);
+        fs.writeFileSync(logFile, JSON.stringify(touchLogs, null, 2), 'utf8');
+        
+        console.log(`GASポーリングにより ${unsyncedLogs.length} 件のログが同期されました。`);
+        
+        res.status(200).json({
+            success: true,
+            syncedLogs: unsyncedLogs
+        });
+    } else {
+        res.status(200).json({
+            success: true,
+            message: 'No unsynced logs to process.'
+        });
+    }
 });
 
 // POST /api/idm - C#アプリからIDmを受け取るAPI
