@@ -86,6 +86,7 @@ app.post('/api/idm', (req, res) => {
             isSyncedWithGas: false // 新しいログは同期されていない状態
         };
         touchLogs.push(logEntry);
+        console.log(logEntry)
 
         // ログをJSONファイルに追記
         const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD

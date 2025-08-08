@@ -10,7 +10,6 @@ body {
   color: #333;
 }
 .container {
-  max-width: 800px;
   width: 100%;
   background: #fff;
   padding: 30px;
@@ -133,7 +132,6 @@ input:checked + .slider:before {
   border-bottom: none;
 }
 .log-item-idm {
-  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
   color: #333;
 }
