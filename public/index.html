@@ -85,6 +85,7 @@
             data.logs.reverse().forEach(log => {
               const li = document.createElement('li');
               li.className = 'log-item';
+              console.log(log.isSyncedWithGas);
               const syncStatus = log.isSyncedWithGas ? '✓' : '✗';
               const syncColor = log.isSyncedWithGas ? '#28a745' : '#dc3545';
               
