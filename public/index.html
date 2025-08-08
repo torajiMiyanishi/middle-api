@@ -78,18 +78,23 @@
               <span>名前</span>
               <span>モード</span>
               <span>タイムスタンプ</span>
+              <span>GAS同期</span>
             `;
             logList.appendChild(header);
 
             data.logs.reverse().forEach(log => {
               const li = document.createElement('li');
               li.className = 'log-item';
+              const syncStatus = log.isSyncedWithGas ? '✓' : '✗';
+              const syncColor = log.isSyncedWithGas ? '#28a745' : '#dc3545';
+              
               li.innerHTML = `
                 <div><span class="log-item-idm">${log.idm}</span></div>
                 <div><span class="log-item-employeeId">${log.employeeId}</span></div>
                 <div><span class="log-item-name">${log.name}</span></div>
                 <div><span class="log-item-mode" style="color: ${log.mode === '出勤' ? '#28a745' : '#dc3545'};">${log.mode}</span></div>
                 <div><span class="log-item-timestamp">${log.timestamp}</span></div>
+                <div><span class="log-item-sync" style="color: ${syncColor};">${syncStatus}</span></div>
               `;
               logList.appendChild(li);
             });
