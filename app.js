@@ -2,6 +2,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const fs = require('fs'); // ファイルシステムモジュールをインポート
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -14,6 +15,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let currentMode = '出勤'; // 初期モードは「出勤」
 let touchLogs = []; // タッチログを保存する配列
+
+// IDmと社員情報を紐づけるデータをメモリ上にロード
+let employeeData = {};
+try {
+  const data = fs.readFileSync(path.join(__dirname, 'private', 'data.json'), 'utf8');
+  employeeData = JSON.parse(data);
+  console.log('社員情報が正常に読み込まれました。');
+} catch (err) {
+  console.error('社員情報の読み込み中にエラーが発生しました:', err);
+}
 
 // GET /api/status - 現在のモードとログを返すAPI
 app.get('/api/status', (req, res) => {
@@ -28,14 +39,22 @@ app.post('/api/idm', (req, res) => {
     const idm = req.body.idm;
     if (idm) {
         const timestamp = new Date().toLocaleString('ja-JP');
-        // UIで選択されているモードをログに記録
-        const logEntry = { idm: idm, mode: currentMode, timestamp: timestamp };
+        
+        // 読み取ったIDmで社員情報を検索
+        const employeeInfo = employeeData[idm] || { employeeId: '不明', name: '不明' };
+        
+        const logEntry = { 
+            idm: idm,
+            employeeId: employeeInfo.employeeId,
+            name: employeeInfo.name,
+            mode: currentMode, 
+            timestamp: timestamp 
+        };
         touchLogs.push(logEntry);
-        // ログのサイズを制限（例: 最新100件のみ保持）
         if (touchLogs.length > 100) {
             touchLogs.shift();
         }
-        console.log(`[${timestamp}] ${currentMode} IDm: ${idm}`);
+        console.log(`[${timestamp}] ${currentMode} IDm: ${idm}, 社員番号: ${employeeInfo.employeeId}, 名前: ${employeeInfo.name}`);
         res.status(200).json({ success: true, message: 'IDm received and logged.' });
     } else {
         res.status(400).json({ success: false, message: 'Invalid IDm received.' });

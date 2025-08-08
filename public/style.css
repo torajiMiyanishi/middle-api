@@ -22,46 +22,62 @@ h1 {
   color: #007BFF;
   margin-bottom: 20px;
 }
-#mode-display {
+#mode-display-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+#mode-text {
   font-size: 2em;
   font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 8px;
-  color: white;
-  transition: background-color 0.3s ease;
-  margin-bottom: 20px;
+  transition: color 0.3s ease;
 }
-#mode-出勤 {
-  background-color: #28a745;
+
+/* トグルスイッチのCSS */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
 }
-#mode-退勤 {
-  background-color: #dc3545;
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
-.mode-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-.mode-buttons button {
-  padding: 12px 25px;
-  font-size: 1em;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
+.slider {
+  position: absolute;
   cursor: pointer;
-  color: white;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #dc3545; /* 退勤モードの背景色 */
+  transition: .4s;
 }
-.mode-buttons button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
 }
-#출勤-button {
-  background-color: #28a745;
+input:checked + .slider {
+  background-color: #28a745; /* 出勤モードの背景色 */
 }
-#退勤-button {
-  background-color: #dc3545;
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
 }
 .log-container {
   margin-top: 30px;
@@ -81,11 +97,19 @@ h1 {
   border-radius: 8px;
   padding: 10px;
 }
+.log-item-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 0.5fr 2fr;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-bottom: 1px solid #ccc;
+    background-color: #e2e6ea;
+}
 .log-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 0.5fr 2fr;
   padding: 8px 12px;
   border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 .log-item:last-child {
@@ -94,6 +118,14 @@ h1 {
 .log-item-idm {
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
+  color: #555;
+}
+.log-item-employeeId {
+  font-weight: normal;
+  color: #555;
+}
+.log-item-name {
+  font-weight: normal;
   color: #555;
 }
 .log-item-mode {
